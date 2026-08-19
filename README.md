@@ -108,9 +108,6 @@ I'd stream/paginate the result table rather than change the algorithms.
 
 Approximately 1.5 hours.
 
-## AI tools used
+video explnation
+https://www.loom.com/share/25ee6bdce3b4419f85decbe4681e16a7
 
-I used Claude to help scaffold the project structure and discuss
-approach/trade-offs (e.g., three-color DFS vs. repeated path-walking for
-cycle detection, and how to structure lookups so manager rows can appear
-in any order). 
