@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Import Result — {{ filename }}</title>
+  <style>
+    body { font-family: sans-serif; max-width: 900px; margin: 40px auto; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 2em; }
+    th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; font-size: 14px; }
+    th { background: #f2f2f2; }
+    .summary { display: flex; gap: 2em; margin-bottom: 2em; flex-wrap: wrap; }
+    .summary div { background: #f7f7f7; padding: 10px 16px; border-radius: 6px; }
+    .cyclic { color: #b00020; font-weight: bold; }
+    a.back { display: inline-block; margin-top: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Import Result</h1>
+  <p>File: <strong>{{ filename }}</strong></p>
+
+  <div class="summary">
+    <div>Total source rows<br><strong>{{ result.total_source_rows }}</strong></div>
+    <div>Accepted employees<br><strong>{{ result.accepted_employees|length }}</strong></div>
+    <div>Row errors<br><strong>{{ result.row_errors|length }}</strong></div>
+    <div>Roots<br><strong>{{ result.roots|length }}</strong></div>
+    <div>Cyclic employees<br><strong>{{ result.cyclic_employee_ids|length }}</strong></div>
+  </div>
+
+  <h2>Row Errors</h2>
+  {% if result.row_errors %}
+  <table>
+    <tr><th>Source Row</th><th>Employee ID</th><th>Error</th></tr>
+    {% for e in result.row_errors %}
+    <tr>
+      <td>{{ e.source_row_number }}</td>
+      <td>{{ e.employee_id }}</td>
+      <td>{{ e.message }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>None.</p>
+  {% endif %}
+
+  <h2>Root Employees (no manager)</h2>
+  {% if result.roots %}
+  <table>
+    <tr><th>Employee ID</th><th>Name</th><th>Department</th></tr>
+    {% for r in result.roots %}
+    <tr>
+      <td>{{ r.employee_id }}</td>
+      <td>{{ r.employee_name }}</td>
+      <td>{{ r.department }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>None.</p>
+  {% endif %}
+
+  <h2>Managers &amp; Direct Report Counts</h2>
+  {% if result.manager_report_counts %}
+  <table>
+    <tr><th>Manager Employee ID</th><th>Direct Reports</th></tr>
+    {% for manager_id, count in result.manager_report_counts.items() %}
+    <tr>
+      <td>{{ manager_id }}</td>
+      <td>{{ count }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>None.</p>
+  {% endif %}
+
+  <h2>All Accepted Employees</h2>
+  <table>
+    <tr>
+      <th>Row</th><th>Employee ID</th><th>Name</th><th>Manager ID (resolved)</th>
+      <th>Manager Error</th><th>Root?</th><th>Cyclic?</th>
+    </tr>
+    {% for emp in result.accepted_employees %}
+    <tr class="{{ 'cyclic' if emp.is_cyclic else '' }}">
+      <td>{{ emp.source_row_number }}</td>
+      <td>{{ emp.employee_id }}</td>
+      <td>{{ emp.employee_name }}</td>
+      <td>{{ emp.resolved_manager_id or '' }}</td>
+      <td>{{ emp.manager_error or '' }}</td>
+      <td>{{ 'yes' if emp.is_root else '' }}</td>
+      <td>{{ 'yes' if emp.is_cyclic else '' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <a class="back" href="/">← Upload another file</a>
+</body>
+</html>

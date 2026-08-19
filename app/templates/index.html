@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HRIS Import Preview</title>
+  <style>
+    body { font-family: sans-serif; max-width: 640px; margin: 60px auto; }
+    .error { color: #b00020; margin-top: 1em; }
+  </style>
+</head>
+<body>
+  <h1>HRIS Import Preview</h1>
+  <p>Upload an HRIS CSV to preview validation results and reporting hierarchy.</p>
+
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".csv" required />
+    <button type="submit">Upload</button>
+  </form>
+
+  {% if error %}
+    <p class="error">Error: {{ error }}</p>
+  {% endif %}
+</body>
+</html>
