@@ -108,6 +108,4 @@ I'd stream/paginate the result table rather than change the algorithms.
 
 Approximately 1.5 hours.
 
-video explnation
-https://www.loom.com/share/25ee6bdce3b4419f85decbe4681e16a7
 
